@@ -9,6 +9,8 @@ const Login = () => {
   // make comments for the codes
   // herer teh state of the showing the password in defined
   const [showpass, setshowpass] = useState(false);
+  // ahndeling the loading state login
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // form validation and form handling is setup using react hook form
@@ -19,18 +21,19 @@ const Login = () => {
   } = useForm<LoginInterface>();
 
   const onSubmit = async (data: LoginInterface) => {
-    console.log(data);
+    setLoading(true);
     // sending the data to the backend and making the api call for the login of user to the system
     const resp = await postData("https://login.dataconstruct.com.np", data);
-    console.log("data", resp);
-
     if (resp) {
-      //if the response is okay and sucessfull redirect to home component
-      navigate("/home");
-      //displaying the success toast message
-      SucessToast({ message: resp?.message });
-      //saving the token provided from the backend to the local storage
-      localStorage.setItem("token", resp.token);
+      setTimeout(() => {
+        //if the response is okay and sucessfull redirect to home component
+        //displaying the success toast message
+        SucessToast({ message: resp?.message });
+        //saving the token provided from the backend to the local storage
+        localStorage.setItem("token", resp.token);
+        setLoading(false); // Set loading to false before navigating
+        navigate("/home");
+      }, 2000);
     }
   };
 
@@ -156,9 +159,33 @@ const Login = () => {
               <div className="!mt-8">
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+                  disabled={loading} // Disable the button while loading
+                  className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none flex items-center justify-center"
                 >
-                  Sign in
+                  {loading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 mr-3 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    "Sign in"
+                  )}
                 </button>
               </div>
               <p className="text-gray-800 text-sm !mt-8 text-center">

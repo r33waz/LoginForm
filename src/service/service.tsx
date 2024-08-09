@@ -18,7 +18,6 @@ export const postData = async (url: string, data: LoginInterface) => {
       });
     } else {
       // Handle the error if it is of another type
-      console.log(error);
       ErrorToast({
         message: "An unexpected error occurred",
       });
