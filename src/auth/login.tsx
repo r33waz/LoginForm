@@ -34,6 +34,8 @@ const Login = () => {
         setLoading(false); // Set loading to false before navigating
         navigate("/home");
       }, 2000);
+    }{
+      setLoading(false);
     }
   };
 
